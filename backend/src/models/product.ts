@@ -1,6 +1,7 @@
 import { unlink } from 'fs'
 import mongoose, { Document } from 'mongoose'
 import { join } from 'path'
+import sanitizeHtml from 'sanitize-html';
 
 export interface IFile {
     fileName: string
@@ -23,6 +24,8 @@ const cardsSchema = new mongoose.Schema<IProduct>(
             required: [true, 'Поле "title" должно быть заполнено'],
             minlength: [2, 'Минимальная длина поля "title" - 2'],
             maxlength: [30, 'Максимальная длина поля "title" - 30'],
+            set: (v: string) =>
+                sanitizeHtml(v, { allowedTags: [], allowedAttributes: {} }),
         },
         image: {
             fileName: {

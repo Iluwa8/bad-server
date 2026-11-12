@@ -15,7 +15,9 @@
 		/* Type Checking */
 		"strict": true /* Enable all strict type-checking options. */,
 		/* Completeness */
-		"skipLibCheck": true /* Skip type checking all .d.ts files. */
+		"skipLibCheck": true /* Skip type checking all .d.ts files. */,
+        "rootDir": "./src",
+        "ignoreDeprecations": "5.0"
 	},
 	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules"]

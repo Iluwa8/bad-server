@@ -5,6 +5,7 @@ import mongoose, { Document, HydratedDocument, Model, Types } from 'mongoose'
 import validator from 'validator'
 import md5 from 'md5'
 
+import sanitizeHtml from 'sanitize-html';
 import { ACCESS_TOKEN, REFRESH_TOKEN } from '../config'
 import UnauthorizedError from '../errors/unauthorized-error'
 
@@ -48,6 +49,8 @@ const userSchema = new mongoose.Schema<IUser, IUserModel, IUserMethods>(
             default: 'Евлампий',
             minlength: [2, 'Минимальная длина поля "name" - 2'],
             maxlength: [30, 'Максимальная длина поля "name" - 30'],
+            set: (v: string) =>
+                sanitizeHtml(v, { allowedTags: [], allowedAttributes: {} }),
         },
         // в схеме пользователя есть обязательные email и password
         email: {
