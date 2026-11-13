@@ -6,11 +6,20 @@ import {
   updateCustomer,
 } from '../controllers/customers';
 import auth, { roleGuardMiddleware } from '../middlewares/auth';
+import { validateCustomerQuery } from '../middlewares/validations'; // <--- 1. Добавили импорт
 import { Role } from '../models/user';
 
 const customerRouter = Router();
 
-customerRouter.get('/', auth, roleGuardMiddleware(Role.Admin), getCustomers);
+// 2. Добавили validateCustomerQuery в цепочку middleware
+customerRouter.get(
+  '/', 
+  auth, 
+  roleGuardMiddleware(Role.Admin), 
+  validateCustomerQuery, 
+  getCustomers
+);
+
 customerRouter.get(
   '/:id',
   auth,

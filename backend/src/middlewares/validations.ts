@@ -10,6 +10,31 @@ export enum PaymentType {
   Online = 'online',
 }
 
+export const validateOrderQuery = celebrate({
+  query: Joi.object().keys({
+    page: Joi.number().integer().min(1),
+    limit: Joi.number().integer().min(1),
+    sortField: Joi.string(),
+    sortOrder: Joi.string().valid('asc', 'desc'),
+    status: Joi.string(),
+    totalAmountFrom: Joi.number(),
+    totalAmountTo: Joi.number(),
+    orderDateFrom: Joi.string().isoDate(),
+    orderDateTo: Joi.string().isoDate(),
+    search: Joi.string().allow(''),
+  }).unknown(false),
+});
+
+export const validateCustomerQuery = celebrate({
+  query: Joi.object().keys({
+    page: Joi.number().integer().min(1),
+    limit: Joi.number().integer().min(1).max(10),
+    sortField: Joi.string().allow(''),
+    sortOrder: Joi.string().valid('asc', 'desc'),
+    search: Joi.string().allow(''),
+  }).unknown(false),
+});
+
 export const validateOrderBody = celebrate({
   body: Joi.object().keys({
     items: Joi.array()

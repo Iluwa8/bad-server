@@ -9,7 +9,7 @@ import {
   updateOrder,
 } from '../controllers/order';
 import auth, { roleGuardMiddleware } from '../middlewares/auth';
-import { validateOrderBody } from '../middlewares/validations';
+import { validateOrderBody, validateOrderQuery } from '../middlewares/validations'; // <--- Добавили импорт
 import { Role } from '../models/user';
 
 const orderRouter = Router();
@@ -19,6 +19,7 @@ orderRouter.get(
   '/all',
   auth,
   roleGuardMiddleware(Role.Admin),
+  validateOrderQuery, // <--- Добавили валидацию query
   getOrders
 );
 orderRouter.get('/all/me', auth, getOrdersCurrentUser);

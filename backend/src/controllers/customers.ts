@@ -101,7 +101,7 @@ export const getCustomers = async (
     }
 
     const pageNum = Number(page);
-    const limitNum = Number(limit);
+    const limitNum = Math.min(Number(limit) || 10, 10);
 
     const options = {
       sort,
