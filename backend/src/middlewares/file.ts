@@ -2,6 +2,7 @@ import { Request, Express } from 'express';
 import multer, { FileFilterCallback } from 'multer';
 import { mkdirSync } from 'fs';
 import { join } from 'path';
+import { randomUUID } from 'crypto';
 
 type DestinationCallback = (error: Error | null, destination: string) => void;
 type FileNameCallback = (error: Error | null, filename: string) => void;
@@ -21,14 +22,14 @@ const storage = multer.diskStorage({
     mkdirSync(destinationPath, { recursive: true });
     cb(null, destinationPath);
   },
+  
   filename: (
     _req: Request,
     file: Express.Multer.File,
     cb: FileNameCallback
   ) => {
-    // Санитизация имени файла: убираем всё, кроме букв, цифр, точки, дефиса и подчёркивания
     const safeName = file.originalname.replace(/[^a-zA-Z0-9._-]/g, '_');
-    cb(null, safeName);
+    cb(null, `${randomUUID()}-${safeName}`);
   },
 });
 

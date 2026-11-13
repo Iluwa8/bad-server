@@ -24,15 +24,11 @@ app.use(cors({
   origin: process.env.ORIGIN_ALLOW || 'http://localhost:5173',
   credentials: true,
 }));
-app.options('*', cors({
-  origin: process.env.ORIGIN_ALLOW || 'http://localhost:5173',
-  credentials: true,
-}));
 
-// 2. Ставим лимит в 10, как того ждут тесты
+
 const limiter = rateLimit({
   windowMs: 1 * 60 * 1000,
-  max: 10, // <--- ИЗМЕНИЛИ НА 10
+  max: 100, 
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: 'Слишком много запросов, попробуйте позже.' },
@@ -44,7 +40,7 @@ app.use(mongoSanitize());
 
 // 3. CSRF-защита
 const csrfProtection = csrf({ cookie: true });
-app.use(csrfProtection);
+app.use((req, res, next) => csrfProtection(req, res, next));
 
 // Эндпоинт для получения CSRF-токена клиентом
 app.get('/auth/csrf-token', (req, res) => {
