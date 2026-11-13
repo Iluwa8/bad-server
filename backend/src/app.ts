@@ -38,7 +38,7 @@ const csrfProtection = csrf({ cookie: true });
 app.use(csrfProtection);
 
 // Эндпоинт для получения CSRF-токена клиентом
-app.get('/csrf-token', (req, res) => {
+app.get('/auth/csrf-token', (req, res) => {
   res.json({ csrfToken: req.csrfToken() });
 });
 
