@@ -40,6 +40,8 @@ const cardsSchema = new mongoose.Schema<IProduct>(
         },
         description: {
             type: String,
+            set: (v: string) =>
+                sanitizeHtml(v, { allowedTags: [], allowedAttributes: {} }),
         },
         price: {
             type: Number,
