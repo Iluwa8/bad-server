@@ -1,14 +1,21 @@
-import { ErrorRequestHandler } from 'express'
+import { ErrorRequestHandler } from 'express';
+import { escape } from 'html-escaper';
 
 const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
-    const statusCode = err.statusCode || 500
-    const message =
-        statusCode === 500 ? 'На сервере произошла ошибка' : err.message
-    console.log(err)
+  const statusCode = err.statusCode || 500;
+  const rawMessage =
+    statusCode === 500 ? 'На сервере произошла ошибка' : err.message;
 
-    res.status(statusCode).send({ message })
+  // Экранируем HTML-спецсимволы, чтобы исключить XSS
+  const message = escape(rawMessage);
 
-    next()
-}
+  // Логируем только в development, чтобы не переполнять диск в production
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(err);
+  }
 
-export default errorHandler
+  res.status(statusCode).send({ message });
+  next();
+};
+
+export default errorHandler;
