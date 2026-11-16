@@ -1,17 +1,42 @@
-import { Router } from 'express'
+import { Router } from 'express';
 import {
-    deleteCustomer,
-    getCustomerById,
-    getCustomers,
-    updateCustomer,
-} from '../controllers/customers'
-import auth from '../middlewares/auth'
+  deleteCustomer,
+  getCustomerById,
+  getCustomers,
+  updateCustomer,
+} from '../controllers/customers';
+import auth, { roleGuardMiddleware } from '../middlewares/auth';
+import { validateCustomerQuery } from '../middlewares/validations'; // <--- 1. Добавили импорт
+import { Role } from '../models/user';
 
-const customerRouter = Router()
+const customerRouter = Router();
 
-customerRouter.get('/', auth, getCustomers)
-customerRouter.get('/:id', auth, getCustomerById)
-customerRouter.patch('/:id', auth, updateCustomer)
-customerRouter.delete('/:id', auth, deleteCustomer)
+// 2. Добавили validateCustomerQuery в цепочку middleware
+customerRouter.get(
+  '/', 
+  auth, 
+  roleGuardMiddleware(Role.Admin), 
+  validateCustomerQuery, 
+  getCustomers
+);
 
-export default customerRouter
+customerRouter.get(
+  '/:id',
+  auth,
+  roleGuardMiddleware(Role.Admin),
+  getCustomerById
+);
+customerRouter.patch(
+  '/:id',
+  auth,
+  roleGuardMiddleware(Role.Admin),
+  updateCustomer
+);
+customerRouter.delete(
+  '/:id',
+  auth,
+  roleGuardMiddleware(Role.Admin),
+  deleteCustomer
+);
+
+export default customerRouter;

@@ -4,8 +4,10 @@ import {
     deleteProduct,
     getProducts,
     updateProduct,
+    uploadFile, 
 } from '../controllers/products'
 import auth, { roleGuardMiddleware } from '../middlewares/auth'
+import upload from '../middlewares/file' 
 import {
     validateObjId,
     validateProductBody,
@@ -16,6 +18,16 @@ import { Role } from '../models/user'
 const productRouter = Router()
 
 productRouter.get('/', getProducts)
+
+// 3. ДОБАВЛЕН МАРШРУТ ЗАГРУЗКИ
+productRouter.post(
+    '/upload',
+    auth,
+    roleGuardMiddleware(Role.Admin),
+    upload.single('file'), // multer должен ожидать поле 'file'
+    uploadFile
+)
+
 productRouter.post(
     '/',
     auth,
