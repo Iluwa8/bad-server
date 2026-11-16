@@ -141,20 +141,20 @@ const deleteProduct = async (
 }
 
 const uploadFile = (req: Request, res: Response, next: NextFunction) => {
-    if (!req.file) {
-        return next(new BadRequestError('Файл не загружен'))
-    }
+  if (!req.file) {
+    return next(new BadRequestError('Файл не загружен'));
+  }
 
-    // Проверка на минимальный размер (2 КБ) - для прохождения теста
-    if (req.file.size < 2048) {
-        unlinkSync(req.file.path) // Удаляем слишком маленький файл, чтобы не засорять диск
-        return next(new BadRequestError('Размер файла должен быть больше 2КБ'))
-    }
+  // Проверка на минимальный размер (2 КБ)
+  if (req.file.size <= 2048) { 
+    unlinkSync(req.file.path);
+    return next(new BadRequestError('Размер файла должен быть больше 2КБ'));
+  }
 
-    return res.status(200).json({
-        fileName: `/${process.env.UPLOAD_PATH}/${req.file.filename}`,
-        originalName: req.file.originalname,
-    })
-}
+  return res.status(200).json({
+    fileName: `/${process.env.UPLOAD_PATH}/${req.file.filename}`,
+    originalName: req.file.originalname,
+  });
+};
 
 export { createProduct, deleteProduct, getProducts, updateProduct, uploadFile }

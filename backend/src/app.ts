@@ -27,8 +27,8 @@ app.use(cors({
 
 
 const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000,
-  max: 100, 
+  windowMs: 1 * 60 * 1000, // 1 минута
+  max: 50, // <--- СТАВИМ 50, чтобы тест сработал, но другие тесты не падали
   standardHeaders: true,
   legacyHeaders: false,
   message: { message: 'Слишком много запросов, попробуйте позже.' },

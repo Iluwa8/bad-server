@@ -28,7 +28,7 @@ export const validateOrderQuery = celebrate({
 export const validateCustomerQuery = celebrate({
   query: Joi.object().keys({
     page: Joi.number().integer().min(1),
-    limit: Joi.number().integer().min(1).max(10),
+    limit: Joi.number().integer().min(1),
     sortField: Joi.string().allow(''),
     sortOrder: Joi.string().valid('asc', 'desc'),
     search: Joi.string().allow(''),
